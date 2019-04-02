@@ -1,14 +1,22 @@
 import { TokenTypes } from './../constants/TokenTypes';
 import { SyntacticAnalyzer, Token } from 'k4ycer-syntactic-analyzer';
 
+
+ let stack = [];
+            
+
 export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     constructor(tokens: Token[]){        
         super(tokens);
 
-        this.setInitialRule(this.A);
+        this.setInitialRule(this.Program);
     }
 
+
+
     private A(){
+        stack.push("A");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
                 this.Def();
@@ -26,10 +34,14 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Array(){
+        stack.push("Array");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.OpenBracketDingoToken:
+                stack.push(TokenTypes.OpenBracketDingoToken);
                 this.consume(TokenTypes.OpenBracketDingoToken);
                 this.Exprlist();
+                stack.push(TokenTypes.CloseBracketDingoToken);
                 this.consume(TokenTypes.CloseBracketDingoToken);
                 break;
             default:
@@ -38,6 +50,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private B(){
+        stack.push("B");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
                 return;
@@ -61,6 +75,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private C(){
+        stack.push("C");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
                 this.Stmt();
@@ -94,6 +110,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private D(){
+        stack.push("D");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
                 return;
@@ -102,12 +120,17 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
             case TokenTypes.ElseDingoKeyword:
                 return;
             case TokenTypes.ElseIfDingoKeyword:
+                stack.push(TokenTypes.ElseIfDingoKeyword);
                 this.consume(TokenTypes.ElseIfDingoKeyword);
+                stack.push(TokenTypes.OpenParenDingoToken);
                 this.consume(TokenTypes.OpenParenDingoToken);
                 this.Expr();
+                stack.push(TokenTypes.CloseParenDingoToken);
                 this.consume(TokenTypes.CloseParenDingoToken);
+                stack.push(TokenTypes.OpenBraceDingoToken);
                 this.consume(TokenTypes.OpenBraceDingoToken);
                 this.Stmtlist();
+                stack.push(TokenTypes.CloseBraceDingoToken);
                 this.consume(TokenTypes.CloseBraceDingoToken);
                 this.D();
                 break;
@@ -127,6 +150,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Def(){
+        stack.push("Def");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
                 this.Fundef();
@@ -140,6 +165,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Deflist(){
+        stack.push("Deflist");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
                 this.A();
@@ -156,12 +183,15 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private E(){
+        stack.push("E");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
                 return;
             case TokenTypes.CommaDingoToken:
                 return;
             case TokenTypes.BarBarDingoToken:
+                stack.push(TokenTypes.BarBarDingoToken);
                 this.consume(TokenTypes.BarBarDingoToken);
                 this.Exprand();
                 this.E();
@@ -176,15 +206,20 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Else(){
+        stack.push("Else");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
                 return;
             case TokenTypes.BreakDingoKeyword:
                 return;
             case TokenTypes.ElseDingoKeyword:
+                stack.push(TokenTypes.ElseIfDingoKeyword);
                 this.consume(TokenTypes.ElseDingoKeyword);
+                stack.push(TokenTypes.OpenBraceDingoToken);
                 this.consume(TokenTypes.OpenBraceDingoToken);
                 this.Stmtlist();
+                stack.push(TokenTypes.CloseBraceDingoToken);
                 this.consume(TokenTypes.CloseBraceDingoToken);
                 break;
             case TokenTypes.IdentifierDingo:
@@ -203,6 +238,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Elseiflist(){
+        stack.push("Elseiflist");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
                 this.D();
@@ -237,6 +274,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Expr(){
+        stack.push("Expr");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationDingoToken:
                 this.Expror();
@@ -271,6 +310,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Expradd(){
+        stack.push("Expradd");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationDingoToken:
                 this.Exprmul();
@@ -314,6 +355,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Exprand(){
+        stack.push("Exprand");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationDingoToken:
                 this.Exprcomp();
@@ -357,6 +400,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Exprcomp(){
+        stack.push("Exprcomp");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationDingoToken:
                 this.Exprrel();
@@ -400,6 +445,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Exprlist(){
+        stack.push("Exprlist");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationDingoToken:
                 this.Expr();
@@ -447,8 +494,11 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Exprlistcont(){
+        stack.push("Exprlistcont");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.CommaDingoToken:
+                stack.push(TokenTypes.CommaDingoToken);
                 this.consume(TokenTypes.CommaDingoToken);
                 this.Expr();
                 this.Exprlistcont();
@@ -463,6 +513,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Exprmul(){
+        stack.push("Exprmul");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationDingoToken:
                 this.Exprunary();
@@ -506,6 +558,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Expror(){
+        stack.push("Expror");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationDingoToken:
                 this.Exprand();
@@ -549,8 +603,11 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Exprprimary(){
+        stack.push("Exprprimary");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
+                stack.push(TokenTypes.IdentifierDingo);
                 this.consume(TokenTypes.IdentifierDingo);
                 this.ExprprimaryP();
                 break;
@@ -567,8 +624,10 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
                 this.Lit();
                 break;
             case TokenTypes.OpenParenDingoToken:
+                stack.push(TokenTypes.OpenParenDingoToken);
                 this.consume(TokenTypes.OpenParenDingoToken);
                 this.Expr();
+                stack.push(TokenTypes.CloseParenDingoToken);
                 this.consume(TokenTypes.CloseParenDingoToken);
                 break;
             default:
@@ -577,6 +636,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private ExprprimaryP(){
+        stack.push("Exprprimary");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
                 return;
@@ -599,8 +660,10 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
             case TokenTypes.LessThanEqualsDingoToken:
                 return;
             case TokenTypes.OpenParenDingoToken:
+                stack.push(TokenTypes.OpenParenDingoToken);
                 this.consume(TokenTypes.OpenParenDingoToken);
                 this.Exprlist();
+                stack.push(TokenTypes.CloseParenDingoToken);
                 this.consume(TokenTypes.CloseParenDingoToken);
                 break;
             case TokenTypes.MinusDingoToken:
@@ -623,6 +686,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Exprrel(){
+        stack.push("Exprrel");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationDingoToken:
                 this.Expradd();
@@ -666,6 +731,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Exprunary(){
+        stack.push("Exprunary");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationDingoToken:
                 this.Opunary();
@@ -706,6 +773,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
 
     
     private F(){
+        stack.push("F");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
             case TokenTypes.CommaDingoToken:
@@ -715,6 +784,7 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
             return;
 
             case TokenTypes.AmpersandAmpersandDingoToken:
+                stack.push(TokenTypes.AmpersandAmpersandDingoToken);
                 this.consume(TokenTypes.AmpersandAmpersandDingoToken);
                 this.Exprcomp();
                 this.F();
@@ -725,11 +795,16 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Funcall(){
+        stack.push("Funcall");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
+                stack.push(TokenTypes.IdentifierDingo);
                 this.consume(TokenTypes.IdentifierDingo);
+                stack.push(TokenTypes.OpenParenDingoToken);
                 this.consume(TokenTypes.OpenParenDingoToken);
                 this.Exprlist();
+                stack.push(TokenTypes.CloseParenDingoToken);
                 this.consume(TokenTypes.CloseParenDingoToken);
                 break;
             default:
@@ -738,15 +813,22 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Fundef(){
+        stack.push("Fundef");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
+                stack.push(TokenTypes.IdentifierDingo);
                 this.consume(TokenTypes.IdentifierDingo);
+                stack.push(TokenTypes.OpenParenDingoToken);
                 this.consume(TokenTypes.OpenParenDingoToken);
                 this.Paramlist();
+                stack.push(TokenTypes.CloseParenDingoToken);
                 this.consume(TokenTypes.CloseParenDingoToken);
+                stack.push(TokenTypes.OpenBraceDingoToken);
                 this.consume(TokenTypes.OpenBraceDingoToken);
                 this.Vardeflist();
                 this.Stmtlist();
+                stack.push(TokenTypes.CloseParenDingoToken);
                 this.consume(TokenTypes.CloseBraceDingoToken)
                 break;
             default:
@@ -755,6 +837,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private G(){
+        stack.push("G");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
             case TokenTypes.AmpersandAmpersandDingoToken:
@@ -779,6 +863,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private H(){
+        stack.push("H");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
             case TokenTypes.AmpersandAmpersandDingoToken:
@@ -816,6 +902,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private I(){
+        stack.push("I");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
             case TokenTypes.AmpersandAmpersandDingoToken:
@@ -849,8 +937,11 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
 
 
     private Id(){
+        stack.push("Id");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
+                stack.push(TokenTypes.IdentifierDingo);
                 this.consume(TokenTypes.IdentifierDingo);
                 break;
 
@@ -860,6 +951,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Idlist(){
+        stack.push("Idlist");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
                 this.Id();
@@ -872,12 +965,16 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Idlistcont(){
+        stack.push("Idlistcont");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.CloseParenDingoToken:
             case TokenTypes.SemicolonDingoToken:
                 return;
             case TokenTypes.CommaDingoToken:    
+                stack.push(TokenTypes.CommaDingoToken);
                 this.consume(TokenTypes.CommaDingoToken);
+                stack.push(TokenTypes.IdentifierDingo);
                 this.consume(TokenTypes.IdentifierDingo);
                 this.Idlistcont();
                 break;
@@ -889,6 +986,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
 
 
     private J(){
+        stack.push("J");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
             case TokenTypes.AmpersandAmpersandDingoToken:            
@@ -930,14 +1029,19 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Lit(){
+        stack.push("Lit");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IntegerLiteralDingo:
+                stack.push(TokenTypes.IdentifierDingo);
                 this.consume(TokenTypes.IntegerLiteralDingo);
                 break;
             case TokenTypes.CharacterLiteralDingo:
+                stack.push(TokenTypes.CharacterLiteralDingo);
                 this.consume(TokenTypes.CharacterLiteralDingo);
                 break;
-            case TokenTypes.StringLiteralDingo:  
+            case TokenTypes.StringLiteralDingo: 
+                stack.push(TokenTypes.StringLiteralDingo); 
                 this.consume(TokenTypes.StringLiteralDingo);
                 break;
                 
@@ -947,11 +1051,15 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Opadd(){
+        stack.push("Opadd");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.MinusDingoToken:
+            stack.push(TokenTypes.MinusDingoToken);
                 this.consume(TokenTypes.MinusDingoToken);
                 break;
             case TokenTypes.PlusDingoToken:
+            stack.push(TokenTypes.PlusDingoToken);
                 this.consume(TokenTypes.PlusDingoToken);
                 break;
 
@@ -961,11 +1069,15 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Opcomp(){
+        stack.push("Opcomp");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationEqualsDingoToken:
+                stack.push(TokenTypes.ExclamationEqualsDingoToken);
                 this.consume(TokenTypes.ExclamationEqualsDingoToken);
                 break;
             case TokenTypes.EqualsEqualsDingoToken:
+                stack.push(TokenTypes.EqualsEqualsDingoToken);
                 this.consume(TokenTypes.EqualsEqualsDingoToken);
                 break;
 
@@ -975,14 +1087,19 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Opmul(){
+        stack.push("Opmul");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.AsteriskDingoToken:
+                stack.push(TokenTypes.AsteriskDingoToken);
                 this.consume(TokenTypes.AsteriskDingoToken);
                 break;
             case TokenTypes.PercentDingoToken:
+            stack.push(TokenTypes.PercentDingoToken);
                 this.consume(TokenTypes.PercentDingoToken);
                 break;
             case TokenTypes.SlashDingoToken:
+            stack.push(TokenTypes.SlashDingoToken);
                 this.consume(TokenTypes.SlashDingoToken);
                 break;
 
@@ -992,17 +1109,23 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Oprel(){
+        stack.push("Oprel");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.GreaterThanDingoToken:
+                stack.push(TokenTypes.GreaterThanDingoToken);
                 this.consume(TokenTypes.GreaterThanDingoToken);
                 break;
             case TokenTypes.GreaterThanEqualsDingoToken:
+            stack.push(TokenTypes.GreaterThanEqualsDingoToken);
                 this.consume(TokenTypes.GreaterThanEqualsDingoToken);
                 break;
             case TokenTypes.LessThanDingoToken:
+            stack.push(TokenTypes.LessThanDingoToken);
                 this.consume(TokenTypes.LessThanDingoToken);
                 break;
             case TokenTypes.LessThanEqualsDingoToken:
+            stack.push(TokenTypes.LessThanEqualsDingoToken);
                 this.consume(TokenTypes.LessThanEqualsDingoToken);
                 break;
             default:
@@ -1011,14 +1134,19 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Opunary(){
+        stack.push("Opunary");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ExclamationDingoToken:
+                stack.push(TokenTypes.ExclamationDingoToken);
                 this.consume(TokenTypes.ExclamationDingoToken);
                 break;
             case TokenTypes.MinusDingoToken:
+                stack.push(TokenTypes.MinusDingoToken);
                 this.consume(TokenTypes.MinusDingoToken);
                 break;
             case TokenTypes.PlusDingoToken:
+                stack.push(TokenTypes.PlusDingoToken);
                 this.consume(TokenTypes.PlusDingoToken);
                 break;
         
@@ -1028,8 +1156,11 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Paramlist(){
+        stack.push("Paramlist");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
+                stack.push(TokenTypes.IdentifierDingo);
                 this.consume(TokenTypes.IdentifierDingo);
                 this.Idlistcont();
                 break;
@@ -1042,6 +1173,9 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Program(){
+         stack.push("Program");
+         console.log(stack);
+
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
                 this.Deflist();
@@ -1059,6 +1193,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmt(){
+        stack.push("Stmt");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
                 this.Stmtempt();
@@ -1086,22 +1222,31 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtp(){
+        stack.push("Stmtp");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.EqualsDingoToken:
+            stack.push(TokenTypes.EqualsDingoToken);
                 this.consume(TokenTypes.EqualsDingoToken);
                 this.Expr();
                 break;
             case TokenTypes.OpenParenDingoToken:
+            stack.push(TokenTypes.OpenParenDingoToken);
                 this.consume(TokenTypes.OpenParenDingoToken);
                 this.Exprlist();
+                stack.push(TokenTypes.CloseParenDingoToken);
                 this.consume(TokenTypes.CloseParenDingoToken);
                 break;
             case TokenTypes.PlusPlusDingoToken:
+                stack.push(TokenTypes.PlusPlusDingoToken);
                 this.consume(TokenTypes.PlusPlusDingoToken);
+                stack.push(TokenTypes.SemicolonDingoToken);
                 this.consume(TokenTypes.SemicolonDingoToken);
                 break;
             case TokenTypes.MinusMinusDingoToken:
+            stack.push(TokenTypes.MinusMinusDingoToken);
                 this.consume(TokenTypes.MinusMinusDingoToken);
+                stack.push(TokenTypes.SemicolonDingoToken);
                 this.consume(TokenTypes.SemicolonDingoToken);
                 break;    
                     
@@ -1112,11 +1257,16 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtassign(){
+        stack.push("Stmtassign");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
+            stack.push(TokenTypes.IdentifierDingo);
                 this.consume(TokenTypes.IdentifierDingo);
+                stack.push(TokenTypes.EqualsDingoToken);
                 this.consume(TokenTypes.EqualsDingoToken);
                 this.Expr();
+                stack.push(TokenTypes.SemicolonDingoToken);
                 this.consume(TokenTypes.SemicolonDingoToken);
                 break;
                                 
@@ -1126,9 +1276,13 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtbreak(){
+        stack.push("Stmtbreak");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.BreakDingoKeyword:
+            stack.push(TokenTypes.BreakDingoKeyword);
                 this.consume(TokenTypes.BreakDingoKeyword);
+                stack.push(TokenTypes.SemicolonDingoToken);
                 this.consume(TokenTypes.SemicolonDingoToken);
                 break;                              
             default:
@@ -1137,10 +1291,15 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtdecr(){
+        stack.push("Stmtdecr");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
+            stack.push(TokenTypes.IdentifierDingo);
                 this.consume(TokenTypes.IdentifierDingo);
+                stack.push(TokenTypes.MinusMinusDingoToken);
                 this.consume(TokenTypes.MinusMinusDingoToken);
+                stack.push(TokenTypes.SemicolonDingoToken);
                 this.consume(TokenTypes.SemicolonDingoToken);
                 break;
 
@@ -1150,8 +1309,11 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtempt(){
+        stack.push("Stmtempt");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
+                stack.push(TokenTypes.SemicolonDingoToken);
                 this.consume(TokenTypes.SemicolonDingoToken);
                 break;
                                             
@@ -1161,9 +1323,12 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtfuncall(){
+        stack.push("Stmtfuncall");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
                 this.Funcall();
+                stack.push(TokenTypes.SemicolonDingoToken);
                 this.consume(TokenTypes.SemicolonDingoToken);
                 break;
 
@@ -1173,14 +1338,21 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtif(){
+        stack.push("Stmtif");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IfDingoKeyword:
+            stack.push(TokenTypes.IfDingoKeyword);
                 this.consume(TokenTypes.IfDingoKeyword);
+                stack.push(TokenTypes.OpenParenDingoToken);
                 this.consume(TokenTypes.OpenParenDingoToken);
                 this.Expr();
+                stack.push(TokenTypes.CloseParenDingoToken);
                 this.consume(TokenTypes.CloseParenDingoToken);
+                stack.push(TokenTypes.OpenBraceDingoToken);
                 this.consume(TokenTypes.OpenBraceDingoToken);
                 this.Stmtlist();
+                stack.push(TokenTypes.CloseBraceDingoToken);
                 this.consume(TokenTypes.CloseBraceDingoToken);
                 this.Elseiflist();
                 this.Else();
@@ -1192,10 +1364,14 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtincr(){
+        stack.push("Stmtincr");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
                 this.Id();
+                 stack.push(TokenTypes.PlusPlusDingoToken);
                 this.consume(TokenTypes.PlusPlusDingoToken);
+                 stack.push(TokenTypes.SemicolonDingoToken);
                 this.consume(TokenTypes.SemicolonDingoToken);
                 break;
 
@@ -1205,6 +1381,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtlist(){
+        stack.push("Stmtlist");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
                 this.C();
@@ -1234,11 +1412,16 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtloop(){
+        stack.push("Stmtloop");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.LoopDingoKeyword:
+            stack.push(TokenTypes.LoopDingoKeyword);
                 this.consume(TokenTypes.LoopDingoKeyword);
+                stack.push(TokenTypes.OpenBraceDingoToken);
                 this.consume(TokenTypes.OpenBraceDingoToken);
                 this.Stmtlist();
+                stack.push(TokenTypes.CloseBraceDingoToken);
                 this.consume(TokenTypes.CloseBraceDingoToken);
                 break;
 
@@ -1248,10 +1431,14 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Stmtreturn(){
+        stack.push("Stmtreturn");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.ReturnDingoKeyword:
+            stack.push(TokenTypes.ReturnDingoKeyword);
                 this.consume(TokenTypes.ReturnDingoKeyword);
                 this.Expr();
+                stack.push(TokenTypes.SemicolonDingoToken);
                 this.consume(TokenTypes.SemicolonDingoToken);
                 break;
 
@@ -1261,10 +1448,14 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Vardef(){
+        stack.push("Vardef");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.VarDingoKeyword:
+            stack.push(TokenTypes.VarDingoKeyword);
                 this.consume(TokenTypes.VarDingoKeyword);
                 this.Varlist();
+                stack.push(TokenTypes.SemicolonDingoToken);
                 this.consume(TokenTypes.SemicolonDingoToken);
                 break;
 
@@ -1274,6 +1465,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Vardeflist(){
+        stack.push("Vardeflist");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.SemicolonDingoToken:
                 this.B();
@@ -1303,6 +1496,8 @@ export class SyntacticAnalyzerDL extends SyntacticAnalyzer{
     }
 
     private Varlist(){
+        stack.push("Varlist");
+        console.log(stack);
         switch(this.currentToken.type){
             case TokenTypes.IdentifierDingo:
                 this.Idlist();

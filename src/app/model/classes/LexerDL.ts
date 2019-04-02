@@ -88,6 +88,6 @@ export class LexerDL extends Lexer{
             position++;
         }
 
-        return lineBreaks/2;
+        return lineBreaks;
     }
 }
