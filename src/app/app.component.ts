@@ -19,8 +19,6 @@ export class AppComponent {
 	ngOnInit(){
 		this.lexer = new LexerDL("");
 		this.syntacticAnalyzer = new SyntacticAnalyzerDL([]);
-
-		// this.compile('prints("Input a number: ");');
 	}
 
 	readFile(e){
@@ -41,7 +39,12 @@ export class AppComponent {
 		let tokens: Token[];
 
 		this.lexer.setInput(input);
-		tokens = this.lexer.tokenize();		
+		try{
+			tokens = this.lexer.tokenize();		
+		}catch(e){
+			console.log("Error en analizador lexico: " + e.message );
+			return
+		}	
 
 		// Add $ token at the end        
 		tokens.push(new Token(TokenTypes.PesoToken, TokenTypes[TokenTypes.PesoToken], "$", null, null));
@@ -56,6 +59,7 @@ export class AppComponent {
 			console.log("Sintacticamente valido");
 		}catch(e){
 			console.log("Error en analizador sintáctico: " + e.message );
+			return;
 		}	
 	}
 }
